@@ -25,34 +25,10 @@ const tierPlanIds = {
     'Vanguard': 'tier-va'
 };
 
-// --- Theme Management ---
-function getThemeColors() {
-    const isLight = document.documentElement.classList.contains('light') || 
-                    (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
-    
-    return {
-        isLight,
-        heading: isLight ? '#0a0a0a' : '#ffffff',
-        text: isLight ? '#6b7280' : '#a1a1aa',
-        label: '#52525b',
-        codeText: isLight ? '#374151' : '#a1a1aa',
-        codeBg: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)',
-        buttonBg: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)',
-        buttonBorder: isLight ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.08)',
-        buttonText: isLight ? '#0a0a0a' : '#a1a1aa',
-        logoFilter: isLight ? 'none' : 'brightness(0) invert(1)'
-    };
-}
-
-// --- Loading States ---
 function showLoading() {
     const el = document.createElement('div');
     el.id = 'fetch-loading';
-    el.innerHTML = `
-        <div class="loading-spinner" style="width:32px;height:32px;margin:0 auto 20px;"></div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#52525b;letter-spacing:0.1em;text-transform:uppercase;">
-            Loading profile…
-        </div>`;
+    el.innerHTML = '<div class="loading-spinner" style="width:32px;height:32px;margin:0 auto 20px;"></div><div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#52525b;letter-spacing:0.1em;text-transform:uppercase;">Loading profile…</div>';
     el.style.cssText = 'position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#050505;z-index:999;';
     document.body.appendChild(el);
 }
@@ -62,7 +38,22 @@ function hideLoading() {
     if (el) el.remove();
 }
 
-// --- Error/Empty States ---
+function getThemeColors() {
+    const isLight = document.documentElement.classList.contains('light');
+    return {
+        isLight,
+        heading: isLight ? '#111827' : '#ffffff',           // Darker black
+        text:    isLight ? '#374151' : '#d1d5db',           // Much darker gray for body
+        label:   isLight ? '#4b5563' : '#9ca3af',           // Stronger label color
+        codeText:isLight ? '#1f2937' : '#e5e7eb',
+        codeBg:  isLight ? '#f3f4f6' : 'rgba(255,255,255,0.08)',
+        buttonBg: isLight ? '#f9fafb' : 'rgba(255,255,255,0.06)',
+        buttonBorder: isLight ? '#d1d5db' : 'rgba(255,255,255,0.1)',
+        buttonText: isLight ? '#111827' : '#e5e7eb',
+        logoFilter: isLight ? 'brightness(0)' : 'brightness(0) invert(1)'
+    };
+}
+
 function showProfileNotSetup(email) {
     hideLoading();
     const c = getThemeColors();
@@ -70,7 +61,7 @@ function showProfileNotSetup(email) {
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;animation:slideUp 0.8s cubic-bezier(0.16,1,0.3,1);">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.15;margin-bottom:40px;filter:${c.logoFilter};" 
+                 style="width:140px;opacity:0.9;margin-bottom:40px;filter:${c.logoFilter};" 
                  alt="SpaceX">
             
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
@@ -103,27 +94,21 @@ function showProfileNotSetup(email) {
         </div>`;
 }
 
+// Same functions for consistency
 function showNotFound() {
     hideLoading();
     const c = getThemeColors();
-    
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.15;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
-                        color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
+                 style="width:140px;opacity:0.9;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 ACCESS DENIED
             </div>
-            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;color:${c.heading};">
-                Member Not Found
-            </h2>
+            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;color:${c.heading};">Member Not Found</h2>
             <p style="color:${c.text};font-size:13px;">
                 No record found for ID: 
-                <code style="color:${c.codeText};background:${c.codeBg};
-                            padding:2px 8px;border-radius:4px;">
-                    ${userId || 'none'}
-                </code>
+                <code style="color:${c.codeText};background:${c.codeBg};padding:2px 8px;border-radius:4px;">${userId || 'none'}</code>
             </p>
         </div>`;
 }
@@ -131,29 +116,22 @@ function showNotFound() {
 function showFetchError() {
     hideLoading();
     const c = getThemeColors();
-    
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.15;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
-                        color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
+                 style="width:140px;opacity:0.9;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 CONNECTION ERROR
             </div>
-            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;color:${c.heading};">
-                Service Unavailable
-            </h2>
+            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;color:${c.heading};">Service Unavailable</h2>
             <p style="color:${c.text};font-size:13px;">
                 Could not reach the member database.<br>Check your connection and try again.
             </p>
         </div>`;
 }
 
-// --- Core Data Injection ---
+// populatePage remains the same
 function populatePage(user) {
-    const c = getThemeColors();
-
-    // Identity update
     document.getElementById('user-name').textContent = user.name;
     const tierColor = tierColors[user.tier] || 'var(--muted)';
     const tierLabel = tierLabels[user.tier] || user.tier;
@@ -161,61 +139,47 @@ function populatePage(user) {
     document.getElementById('user-joined').textContent = `Since ${user.joined}`;
     document.getElementById('user-clearance').textContent = user.clearance;
 
-    // Avatar Logic with Fallback
     const avatarEl = document.getElementById('user-avatar');
-    if (avatarEl) {
-        avatarEl.innerHTML = ''; 
+    if (avatarEl && user.avatarUrl && user.avatarUrl.trim()) {
         const img = document.createElement('img');
-        img.src = (user.avatarUrl && user.avatarUrl.trim()) ? user.avatarUrl.trim() : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`;
+        img.src = user.avatarUrl.trim();
         img.alt = user.name;
         img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
-        img.onerror = () => { img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`; };
         avatarEl.appendChild(img);
     }
 
-    // Dynamic Cover Background based on Theme
     const coverEl = document.getElementById('profile-cover');
     if (coverEl) {
         const bgUrl = (user.backgroundUrl && user.backgroundUrl.trim()) ? user.backgroundUrl.trim() : DEFAULT_BACKGROUND;
-        const overlay = c.isLight 
-            ? 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)' 
-            : 'linear-gradient(to bottom, rgba(15,15,15,0) 0%, rgba(15,15,15,1) 100%)';
-            
-        coverEl.style.backgroundImage = `${overlay}, url('${bgUrl}')`;
+        coverEl.style.backgroundImage = `linear-gradient(to bottom, rgba(15,15,15,0) 0%, rgba(15,15,15,1) 100%), url('${bgUrl}')`;
         coverEl.style.backgroundSize = 'cover';
         coverEl.style.backgroundPosition = 'center';
     }
 
-    // Status Badge Logic
     const statusEl = document.getElementById('user-status');
     const dotEl = document.getElementById('status-dot');
     if (user.status === 'ACTIVE') {
         statusEl.style.color = 'var(--success)';
         statusEl.innerHTML = 'ACTIVE <i data-lucide="check-circle" style="width:12px;height:12px;"></i>';
-        if (dotEl) dotEl.style.background = 'var(--success)';
+        dotEl.style.background = 'var(--success)';
     } else {
         statusEl.style.color = 'var(--pending)';
         statusEl.innerHTML = 'PENDING <i data-lucide="refresh-cw" class="animate-spin-slow" style="width:12px;height:12px;"></i>';
-        if (dotEl) dotEl.style.background = 'var(--pending)';
+        dotEl.style.background = 'var(--pending)';
     }
 
     document.title = `SpaceX HQ | ${user.name}`;
-    
-    // Auto-select tier plan
     const planId = tierPlanIds[user.tier];
     if (planId) {
         const planEl = document.getElementById(planId);
         if (planEl) planEl.classList.add('selected', 'expanded');
     }
-
-    if (window.lucide) lucide.createIcons();
+    lucide.createIcons();
 }
 
-// --- Initialization ---
 document.addEventListener('DOMContentLoaded', async function () {
     showLoading();
 
-    // Direct ID access
     if (userId) {
         try {
             const snap = await getDoc(doc(firestoreDb, 'members', userId));
@@ -226,7 +190,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         return;
     }
 
-    // Logged in user access
     const loggedIn = await isLoggedIn();
     if (!loggedIn) {
         window.location.replace('/pages/login.html');
@@ -241,13 +204,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         hideLoading();
         populatePage(snap.docs[0].data());
     } catch (err) { showFetchError(); }
-});
-
-// Watch for system theme changes and refresh UI if using system default
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (!document.documentElement.className.match(/light|dark/)) {
-        location.reload();
-    }
 });
 
 document.addEventListener('click', async function (e) {
