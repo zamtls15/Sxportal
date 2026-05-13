@@ -42,14 +42,11 @@ function getThemeColors() {
     const isLight = document.documentElement.classList.contains('light');
     return {
         isLight,
-        heading: isLight ? '#111827' : '#ffffff',           // Darker black
-        text:    isLight ? '#374151' : '#d1d5db',           // Much darker gray for body
-        label:   isLight ? '#4b5563' : '#9ca3af',           // Stronger label color
+        heading: isLight ? '#111827' : '#ffffff',
+        text:    isLight ? '#374151' : '#d1d5db',
+        label:   isLight ? '#4b5563' : '#9ca3af',
         codeText:isLight ? '#1f2937' : '#e5e7eb',
         codeBg:  isLight ? '#f3f4f6' : 'rgba(255,255,255,0.08)',
-        buttonBg: isLight ? '#f9fafb' : 'rgba(255,255,255,0.06)',
-        buttonBorder: isLight ? '#d1d5db' : 'rgba(255,255,255,0.1)',
-        buttonText: isLight ? '#111827' : '#e5e7eb',
         logoFilter: isLight ? 'brightness(0)' : 'brightness(0) invert(1)'
     };
 }
@@ -61,7 +58,7 @@ function showProfileNotSetup(email) {
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;animation:slideUp 0.8s cubic-bezier(0.16,1,0.3,1);">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.9;margin-bottom:40px;filter:${c.logoFilter};" 
+                 style="width:140px;opacity:${c.isLight ? '0.95' : '0.15'};margin-bottom:40px;filter:${c.logoFilter};" 
                  alt="SpaceX">
             
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
@@ -74,34 +71,33 @@ function showProfileNotSetup(email) {
                 Profile Not Set Up Yet
             </h2>
             
-            <p style="color:${c.text};font-size:13px;line-height:1.6;margin-bottom:32px;">
+            <p style="color:${c.text};font-size:13px;line-height:1.6;margin-bottom:32px;max-width:420px;margin-left:auto;margin-right:auto;">
                 Your account has been verified but your membership profile<br>
-                hasn't been configured yet. Please contact your administrator.<br><br>
-                <code style="color:${c.codeText};background:${c.codeBg};
-                            padding:2px 10px;border-radius:4px;display:inline-block;">
-                    ${email}
-                </code>
+                hasn't been configured yet. Please contact your administrator.
             </p>
             
+            <div style="color:${c.isLight ? '#6b7280' : '#a1a1aa'}; font-size:13px; margin-bottom:40px; font-family:monospace;">
+                ${email}
+            </div>
+            
             <button data-action="not-member" 
-                    style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;
-                           background:${c.buttonBg};border:1px solid ${c.buttonBorder};
-                           border-radius:12px;color:${c.buttonText};
-                           font-size:13px;font-weight:600;cursor:pointer;
-                           font-family:'Inter',sans-serif;">
+                    style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;
+                           background:#ef4444;color:white;font-size:15px;font-weight:700;
+                           border:none;border-radius:12px;cursor:pointer;
+                           font-family:'Inter',sans-serif;
+                           box-shadow:0 4px 12px rgba(239,68,68,0.3);">
                 Sign out
             </button>
         </div>`;
 }
 
-// Same functions for consistency
 function showNotFound() {
     hideLoading();
     const c = getThemeColors();
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.9;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
+                 style="width:140px;opacity:${c.isLight ? '0.95' : '0.15'};margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 ACCESS DENIED
             </div>
@@ -119,7 +115,7 @@ function showFetchError() {
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.9;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
+                 style="width:140px;opacity:${c.isLight ? '0.95' : '0.15'};margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 CONNECTION ERROR
             </div>
@@ -130,7 +126,6 @@ function showFetchError() {
         </div>`;
 }
 
-// populatePage remains the same
 function populatePage(user) {
     document.getElementById('user-name').textContent = user.name;
     const tierColor = tierColors[user.tier] || 'var(--muted)';
