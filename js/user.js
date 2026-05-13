@@ -38,35 +38,46 @@ function hideLoading() {
     if (el) el.remove();
 }
 
+function getThemeColors() {
+    const isLight = document.documentElement.classList.contains('light');
+    return {
+        isLight,
+        heading: isLight ? '#0a0a0a' : '#ffffff',
+        text: isLight ? '#6b7280' : '#a1a1aa',
+        label: isLight ? '#52525b' : '#52525b',
+        codeText: isLight ? '#374151' : '#a1a1aa',
+        codeBg: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)',
+        buttonBg: isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)',
+        buttonBorder: isLight ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.08)',
+        buttonText: isLight ? '#0a0a0a' : '#a1a1aa',
+        logoFilter: isLight ? 'brightness(0)' : 'brightness(0) invert(1)'
+    };
+}
+
 function showProfileNotSetup(email) {
     hideLoading();
-    const isLight = document.documentElement.classList.contains('light');
+    const c = getThemeColors();
     
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;animation:slideUp 0.8s cubic-bezier(0.16,1,0.3,1);">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.15;margin-bottom:40px; 
-                        filter: ${isLight ? 'brightness(0)' : 'brightness(0) invert(1)'};" 
+                 style="width:140px;opacity:0.15;margin-bottom:40px;filter:${c.logoFilter};" 
                  alt="SpaceX">
             
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
-                        color: ${isLight ? '#6b7280' : '#52525b'};
-                        letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
+                        color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 PROFILE PENDING
             </div>
             
             <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;
-                       color: ${isLight ? '#0a0a0a' : '#ffffff'};
-                       letter-spacing:-0.02em;">
+                       color:${c.heading};letter-spacing:-0.02em;">
                 Profile Not Set Up Yet
             </h2>
             
-            <p style="color: ${isLight ? '#6b7280' : '#52525b'}; font-size:13px;
-                      line-height:1.6;margin-bottom:32px;">
+            <p style="color:${c.text};font-size:13px;line-height:1.6;margin-bottom:32px;">
                 Your account has been verified but your membership profile<br>
                 hasn't been configured yet. Please contact your administrator.<br><br>
-                <code style="color: ${isLight ? '#374151' : '#a1a1aa'};
-                            background: ${isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'};
+                <code style="color:${c.codeText};background:${c.codeBg};
                             padding:2px 10px;border-radius:4px;display:inline-block;">
                     ${email}
                 </code>
@@ -74,10 +85,8 @@ function showProfileNotSetup(email) {
             
             <button data-action="not-member" 
                     style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;
-                           background: ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'};
-                           border:1px solid ${isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.08)'};
-                           border-radius:12px;
-                           color: ${isLight ? '#0a0a0a' : '#a1a1aa'};
+                           background:${c.buttonBg};border:1px solid ${c.buttonBorder};
+                           border-radius:12px;color:${c.buttonText};
                            font-size:13px;font-weight:600;cursor:pointer;
                            font-family:'Inter',sans-serif;">
                 Sign out
@@ -87,26 +96,22 @@ function showProfileNotSetup(email) {
 
 function showNotFound() {
     hideLoading();
-    const isLight = document.documentElement.classList.contains('light');
+    const c = getThemeColors();
     
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.15;margin-bottom:40px; 
-                        filter: ${isLight ? 'brightness(0)' : 'brightness(0) invert(1)'};" alt="SpaceX">
+                 style="width:140px;opacity:0.15;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
-                        color: ${isLight ? '#6b7280' : '#52525b'};
-                        letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
+                        color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 ACCESS DENIED
             </div>
-            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;
-                       color: ${isLight ? '#0a0a0a' : '#ffffff'};">
+            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;color:${c.heading};">
                 Member Not Found
             </h2>
-            <p style="color: ${isLight ? '#6b7280' : '#52525b'};font-size:13px;">
+            <p style="color:${c.text};font-size:13px;">
                 No record found for ID: 
-                <code style="color: ${isLight ? '#374151' : '#a1a1aa'};
-                            background: ${isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'};
+                <code style="color:${c.codeText};background:${c.codeBg};
                             padding:2px 8px;border-radius:4px;">
                     ${userId || 'none'}
                 </code>
@@ -116,23 +121,20 @@ function showNotFound() {
 
 function showFetchError() {
     hideLoading();
-    const isLight = document.documentElement.classList.contains('light');
+    const c = getThemeColors();
     
     document.querySelector('.portal-container').innerHTML = `
         <div style="text-align:center;padding:80px 20px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg"
-                 style="width:140px;opacity:0.15;margin-bottom:40px; 
-                        filter: ${isLight ? 'brightness(0)' : 'brightness(0) invert(1)'};" alt="SpaceX">
+                 style="width:140px;opacity:0.15;margin-bottom:40px;filter:${c.logoFilter};" alt="SpaceX">
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;
-                        color: ${isLight ? '#6b7280' : '#52525b'};
-                        letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
+                        color:${c.label};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">
                 CONNECTION ERROR
             </div>
-            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;
-                       color: ${isLight ? '#0a0a0a' : '#ffffff'};">
+            <h2 style="font-size:20px;font-weight:600;margin-bottom:12px;color:${c.heading};">
                 Service Unavailable
             </h2>
-            <p style="color: ${isLight ? '#6b7280' : '#52525b'};font-size:13px;">
+            <p style="color:${c.text};font-size:13px;">
                 Could not reach the member database.<br>Check your connection and try again.
             </p>
         </div>`;
